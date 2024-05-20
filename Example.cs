@@ -5,7 +5,7 @@
     {
         Server.AddRoute("/", (req, res) =>
         {
-            res.Send("Hello world");
+            res.SendAndClose("Hello world");
         });
     }
 }
