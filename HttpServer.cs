@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 internal class HttpServer
 {
-    public delegate void HttpRequestDelegate(HttpListenerRequest Reques, HttpListenerResponse Response);
+    public delegate void HttpRequestDelegate(HttpListenerRequest Request, HttpListenerResponse Response);
     private HttpListener Listener;
     private Dictionary<string, HttpRequestDelegate> RequestHandlers;
     private void Init()
