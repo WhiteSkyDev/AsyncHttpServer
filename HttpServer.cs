@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -6,11 +6,13 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-internal class HttpServer
+internal class HttpServer : IDisposable
 {
     public delegate void HttpRequestDelegate(HttpListenerRequest Request, HttpListenerResponse Response);
     private HttpListener Listener;
     private Dictionary<string, HttpRequestDelegate> RequestHandlers;
+    private bool Disposed = false;  
+
     private void Init()
     {
         Listener = new HttpListener();
@@ -30,7 +32,7 @@ internal class HttpServer
         Listener.Start();
         new Thread(() =>
         {
-            while (true)
+            while (!Disposed)
             {
                 IAsyncResult Result = Listener.BeginGetContext(HandleRequest, Listener);
                 Result.AsyncWaitHandle.WaitOne();
@@ -53,6 +55,29 @@ internal class HttpServer
     }
     public void AddRoute(string AbsolutePath, HttpRequestDelegate Callback)
     {
-        RequestHandlers.Add(AbsolutePath, Callback);
+        if (!RequestHandlers.ContainsKey(AbsolutePath))
+        {
+            RequestHandlers.Add(AbsolutePath, Callback);
+        }
+        else
+        {
+            Logger.LogError("This route already exist!");
+        }
+    }
+    public void RemoveRoute(string AbsolutePath)
+    {
+        if (RequestHandlers.ContainsKey(AbsolutePath))
+        {
+            RequestHandlers.Remove(AbsolutePath);
+        }
+        else
+        {
+            Logger.LogError("This route doesn`t exist!");
+        }
+    }
+
+    public void Dispose()
+    {
+        Disposed = true;
     }
 }
