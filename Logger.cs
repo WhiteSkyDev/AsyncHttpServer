@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -42,22 +42,18 @@ internal static class Logger
                     case LogSeverity.Info:
                         Console.ForegroundColor = ConsoleColor.Green;
                         Console.Write($"[{DateTime.Now}/INFO]");
-                        Console.ForegroundColor = ConsoleColor.White;
-                        Console.WriteLine($" {CurrentLog.Content}");
                         break;
                     case LogSeverity.Warning:
                         Console.ForegroundColor = ConsoleColor.Yellow;
                         Console.Write($"[{DateTime.Now}/WARNING]");
-                        Console.ForegroundColor = ConsoleColor.White;
-                        Console.WriteLine($" {CurrentLog.Content}");
                         break;
                     case LogSeverity.Error:
                         Console.ForegroundColor = ConsoleColor.Red;
                         Console.Write($"[{DateTime.Now}/ERROR]");
-                        Console.ForegroundColor = ConsoleColor.White;
-                        Console.WriteLine($" {CurrentLog.Content}");
                         break;
                 }
+                Console.ForegroundColor = ConsoleColor.White;
+                Console.WriteLine($" {CurrentLog.Content}");
                 Thread.Sleep(10);
             }
         }).Start();
