@@ -79,5 +79,11 @@ internal class HttpServer : IDisposable
     public void Dispose()
     {
         Disposed = true;
+        GC.SuppressFinalize(this);
     }
+    ~HttpServer()
+    {
+        Dispose();
+    }
+}
 }
