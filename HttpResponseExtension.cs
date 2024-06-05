@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -7,7 +7,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
-internal static class HttpResponseExtension
+public static class HttpResponseExtension
 {
     public static void SendFile(this HttpListenerResponse instance, string FilePath)
     {
@@ -31,7 +31,7 @@ internal static class HttpResponseExtension
     }
     public static void SendEmbedResource(this HttpListenerResponse instance, string Path)
     {
-        byte[] FileContent = Encoding.UTF8.GetBytes(new StreamReader(Assembly.GetExecutingAssembly().GetManifestResourceStream(Path)).ReadToEnd());
+        byte[] FileContent = Encoding.UTF8.GetBytes(new StreamReader(Assembly.GetCallingAssembly().GetManifestResourceStream(Path)).ReadToEnd());
         instance.OutputStream.Write(FileContent, 0, FileContent.Length);
     }
     public static void SendEmbedResourceAndClose(this HttpListenerResponse instance, string Path)
