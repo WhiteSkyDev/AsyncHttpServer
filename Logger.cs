@@ -1,11 +1,11 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-internal static class Logger
+public static class Logger
 {
     public enum LogSeverity
     {
@@ -17,6 +17,7 @@ internal static class Logger
         public LogSeverity Level;
     }
     private static Queue<Log> LogQueue = new Queue<Log>();
+    private static TimeSpan LogDelay = TimeSpan.FromMilliseconds(10);
     public static void LogInfo(string message)
     {
         LogQueue.Enqueue(new Log { Content = message, Level = LogSeverity.Info });
@@ -29,9 +30,13 @@ internal static class Logger
     {
         LogQueue.Enqueue(new Log { Content = message, Level = LogSeverity.Error });
     }
+    public static void ChangeLogDelay(TimeSpan Delay)
+    {
+        LogDelay = Delay;
+    }
     static Logger()
     {
-        new Thread(() =>
+        new Task(async () =>
         {
             while (true)
             {
@@ -54,7 +59,7 @@ internal static class Logger
                 }
                 Console.ForegroundColor = ConsoleColor.White;
                 Console.WriteLine($" {CurrentLog.Content}");
-                Thread.Sleep(10);
+                await Task.Delay(LogDelay);
             }
         }).Start();
     }
